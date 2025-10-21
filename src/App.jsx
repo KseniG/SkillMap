@@ -1,7 +1,14 @@
-import SkillMap from "./SkillMap";
+import { useState } from "react"
+import SkillMap from "./SkillMap.jsx"
+import CoursePage from "./CoursePage.jsx"
 
-function App() {
-  return <SkillMap />;
+export default function App() {
+  const [page, setPage] = useState("map") // "map" | "course"
+
+  return (
+    <div className="w-full h-screen bg-gradient-to-b from-indigo-900 via-blue-900 to-cyan-800 overflow-hidden">
+      {page === "map" && <SkillMap onGoToCourse={() => setPage("course")} />}
+      {page === "course" && <CoursePage />}
+    </div>
+  )
 }
-
-export default App;

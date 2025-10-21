@@ -5,5 +5,9 @@
 html, body, #root {
   height: 100%;
   margin: 0;
-  background-color: black;
+  transition: background 0.5s, color 0.5s;
+}
+
+body {
+  @apply bg-gradient-to-b from-slate-900 to-slate-800 text-gray-100 dark:text-gray-900;
 }

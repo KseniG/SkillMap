@@ -1,111 +1,103 @@
-import { motion, useAnimation } from "framer-motion";
-import { useState } from "react";
+import { useState } from "react"
+import { motion } from "framer-motion"
+import SkillNode from "./components/SkillNode.jsx"
 
-/**
- * Skill Map — базовая визуальная карта умений
- * v1: анимация, зум, подсветка и ветки между узлами
- */
+export default function SkillMap({ onGoToCourse }) {
+  const [unlocked, setUnlocked] = useState({
+    entrance: true,
+    fractions: false,
+    coordinates: false,
+    wordProblems: false,
+  })
+  const [showTest, setShowTest] = useState(false)
+  const [answers, setAnswers] = useState({ q1: "", q2: "" })
+  const [unlockAnim, setUnlockAnim] = useState(false)
 
-export default function SkillMap() {
-  const [selectedSkill, setSelectedSkill] = useState(null);
-  const controls = useAnimation();
+  const handleEntranceClick = () => setShowTest(true)
 
-  // Список умений (можно будет расширить)
-  const skills = [
-    { id: 1, name: "Действия с дробями", x: 0, y: 0, desc: "Базовое умение. Даёт видение пути." },
-    { id: 2, name: "Текстовые задачи", x: 150, y: -100, desc: "Позволяет двигаться быстрее." },
-    { id: 3, name: "Координаты", x: -150, y: -100, desc: "Увеличивает радиус восприятия." },
-    { id: 4, name: "Вход", x: 0, y: 150, desc: "Усиливает базовые атаки." },
-  ];
-
-  // Линии между умениями
-  const links = [
-    [1, 2],
-    [1, 3],
-    [1, 4],
-  ];
+  const handleSubmit = () => {
+    if (answers.q1 === "8" && answers.q2 === "12") {
+      setShowTest(false)
+      setUnlockAnim(true)
+      setTimeout(() => {
+        setUnlocked({ ...unlocked, fractions: true })
+        setUnlockAnim(false)
+      }, 1200)
+    } else {
+      alert("Проверь ответы 😅")
+    }
+  }
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-b from-indigo-900 via-blue-900 to-cyan-800 overflow-hidden">
-      {/* SVG-карта */}
-      <svg viewBox="-200 -200 400 400" className="w-full h-full">
-  <defs>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stopColor="rgba(0,255,255,1)" />
-      <stop offset="100%" stopColor="rgba(0,255,255,0)" />
-    </radialGradient>
-  </defs>
-        {/* Линии */}
-        {links.map(([a, b]) => {
-          const sa = skills.find(s => s.id === a);
-          const sb = skills.find(s => s.id === b);
-          return (
-            <motion.line
-              key={`${a}-${b}`}
-              x1={sa.x}
-              y1={sa.y}
-              x2={sb.x}
-              y2={sb.y}
-              stroke="url(#glow)"
-              strokeWidth="2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ duration: 1.5 }}
-            />
-          );
-        })}
-
-        {/* Градиент свечения */}
+    <div className="relative w-full h-full flex items-center justify-center">
+      <svg viewBox="-250 -200 500 400" className="w-full h-full">
         <defs>
-          <radialGradient id="glow">
-            <stop offset="0%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="transparent" />
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(0,255,255,1)" />
+            <stop offset="100%" stopColor="rgba(0,255,255,0)" />
           </radialGradient>
         </defs>
 
-        {/* Узлы умений */}
-        {skills.map(skill => (
-          <motion.circle
-            key={skill.id}
-            cx={skill.x}
-            cy={skill.y}
-            r={selectedSkill?.id === skill.id ? 24 : 18}
-            fill="url(#glow)"
-            stroke="#7dd3fc"
-            strokeWidth="2"
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setSelectedSkill(skill)}
+        {/* Анимированная линия */}
+        {unlocked.fractions && (
+          <motion.line
+            x1="0"
+            y1="0"
+            x2="150"
+            y2="-100"
+            stroke="url(#glow)"
+            strokeWidth="3"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.7 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
           />
-        ))}
+        )}
 
-        {/* Текст умений */}
-        {skills.map(skill => (
-          <text
-            key={`label-${skill.id}`}
-            x={skill.x}
-            y={skill.y + 40}
-            fill="#bae6fd"
-            textAnchor="middle"
-            fontSize="14"
-            fontFamily="sans-serif"
-          >
-            {skill.name}
-          </text>
-        ))}
+        <SkillNode x={0} y={0} label="Вход" unlocked={unlocked.entrance} onClick={handleEntranceClick} />
+        <SkillNode x={150} y={-100} label="Действия с дробями" unlocked={unlocked.fractions} onClick={onGoToCourse} />
+        <SkillNode x={-150} y={-100} label="Координаты на числовом луче" unlocked={unlocked.coordinates} />
+        <SkillNode x={0} y={150} label="Текстовые задачи" unlocked={unlocked.wordProblems} />
       </svg>
 
-      {/* Панель описания */}
-      {selectedSkill && (
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-slate-800/80 backdrop-blur-md border border-sky-500/50 rounded-2xl p-6 w-80 text-center text-sky-100 shadow-xl"
+      {/* Кнопка “Курс” */}
+      {unlocked.fractions && (
+        <motion.button
+          onClick={onGoToCourse}
+          className="absolute bottom-8 px-6 py-2 bg-cyan-600 text-white rounded-xl shadow-lg hover:bg-cyan-500 transition"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
         >
-          <h2 className="text-xl font-bold mb-2">{selectedSkill.name}</h2>
-          <p className="text-sm text-sky-200">{selectedSkill.desc}</p>
-        </motion.div>
+          Курс
+        </motion.button>
+      )}
+
+      {/* Модальное окно теста */}
+      {showTest && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+          <div className="bg-gray-900 bg-opacity-90 p-6 rounded-xl shadow-xl text-white w-80 text-center">
+            <h2 className="text-xl mb-4 font-semibold">Входное тестирование</h2>
+            <p>1️⃣ 3 + 5 = ?</p>
+            <input
+              className="w-full mb-3 p-2 bg-gray-800 border border-gray-600 rounded"
+              value={answers.q1}
+              onChange={(e) => setAnswers({ ...answers, q1: e.target.value })}
+            />
+            <p>2️⃣ 6 × 2 = ?</p>
+            <input
+              className="w-full mb-4 p-2 bg-gray-800 border border-gray-600 rounded"
+              value={answers.q2}
+              onChange={(e) => setAnswers({ ...answers, q2: e.target.value })}
+            />
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-cyan-600 hover:bg-cyan-500 rounded py-2 transition"
+            >
+              Проверить
+            </button>
+          </div>
+        </div>
       )}
     </div>
-  );
+  )
 }
