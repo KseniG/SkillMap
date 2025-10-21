@@ -1,5 +1,7 @@
 import SkillMap from "./SkillMap";
 
-export default function App() {
+function App() {
   return <SkillMap />;
 }
+
+export default App;
