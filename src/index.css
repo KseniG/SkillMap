@@ -6,6 +6,8 @@ html, body, #root {
   height: 100%;
   margin: 0;
   transition: background 0.5s, color 0.5s;
+  background-color: black;
+  -webkit-text-fill-color: white;
 }
 
 body {

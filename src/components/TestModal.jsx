@@ -31,6 +31,7 @@ export default function TestModal({ onComplete }) {
             <p>{q}</p>
             <input
               className="w-full p-2 bg-gray-800 border border-gray-600 rounded mt-1"
+              style={{ color: 'black', WebkitTextFillColor: 'black' }}
               value={answers[i]}
               onChange={(e) => {
                 const newA = [...answers]
@@ -42,6 +43,7 @@ export default function TestModal({ onComplete }) {
         ))}
         <button
           onClick={handleSubmit}
+          style={{ color: 'black', WebkitTextFillColor: 'black' }}
           className="w-full bg-cyan-600 hover:bg-cyan-500 py-2 rounded mt-4"
         >
           Проверить

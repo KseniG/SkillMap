@@ -7,7 +7,7 @@ export default function TheoryModal({ onClose }) {
   useEffect(() => {
     const timer = setInterval(() => {
       setStep((prev) => (prev < 3 ? prev + 1 : prev))
-    }, 2500)
+    }, 3500)
     return () => clearInterval(timer)
   }, [])
 
@@ -41,7 +41,7 @@ export default function TheoryModal({ onClose }) {
                   fill="rgba(0,255,255,0.3)"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ duration: 1 }}
+                  transition={{ duration: 2 }}
                 />
               )}
             </AnimatePresence>
@@ -54,7 +54,7 @@ export default function TheoryModal({ onClose }) {
                   fill="rgba(0,255,100,0.3)"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ duration: 1 }}
+                  transition={{ duration: 2 }}
                 />
               )}
             </AnimatePresence>
@@ -67,7 +67,7 @@ export default function TheoryModal({ onClose }) {
                   fill="rgba(255,200,0,0.3)"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ duration: 1 }}
+                  transition={{ duration: 2 }}
                 />
               )}
             </AnimatePresence>
@@ -91,7 +91,7 @@ export default function TheoryModal({ onClose }) {
           className="text-center text-gray-200 mb-6 min-h-[80px]"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 1 }}
         >
           {explanations[step]}
         </motion.p>
@@ -100,6 +100,7 @@ export default function TheoryModal({ onClose }) {
           <motion.button
             onClick={onClose}
             className="bg-cyan-600 hover:bg-cyan-500 px-8 py-2 rounded-xl text-white font-semibold shadow-lg transition"
+            style={{ color: 'black', WebkitTextFillColor: 'black' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
